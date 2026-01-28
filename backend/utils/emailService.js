@@ -23,13 +23,14 @@ export const generateOTP = () => {
 };
 
 export const sendOTP = async (email, otp) => {
+  // Always log OTP for debugging purposes
+  console.log('=================================================');
+  console.log(`OTP Generated for ${email}: ${otp}`);
+  console.log('=================================================');
+
   // If credentials are not set, log to console for development
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-    console.log('=================================================');
-    console.log(`[DEV MODE] Email Service mocked.`);
-    console.log(`To: ${email}`);
-    console.log(`OTP: ${otp}`);
-    console.log('=================================================');
+    console.log('[DEV MODE] Email Service mocked.');
     return true;
   }
 
