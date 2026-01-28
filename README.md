@@ -149,4 +149,4 @@ This project was developed as part of a technical assessment.
 
 ---
 
-**Note:** For security reasons, environment variables and API keys are not included in this repository. Contact the developer for deployment configuration details.
+**Note:** For security reasons, environment variables and API keys are not included in this repository. Contact me for deployment configuration details.
