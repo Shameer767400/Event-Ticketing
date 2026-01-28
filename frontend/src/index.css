@@ -1,19 +1,19 @@
 :root {
-  /* Color Palette - Professional & Modern */
-  --primary: hsl(217, 91%, 60%);        /* Professional Blue */
-  --primary-dark: hsl(217, 91%, 50%);
-  --primary-light: hsl(217, 91%, 70%);
-  --secondary: hsl(210, 20%, 60%);      /* Slate Blue */
-  --accent: hsl(195, 75%, 50%);         /* Cyan Accent */
+  /* Color Palette - Sophisticated Emerald Theme */
+  --primary: hsl(158, 64%, 52%);        /* Emerald Green */
+  --primary-dark: hsl(158, 64%, 42%);
+  --primary-light: hsl(158, 64%, 62%);
+  --secondary: hsl(162, 28%, 45%);      /* Muted Teal */
+  --accent: hsl(45, 86%, 62%);          /* Gold Accent */
   --success: hsl(142, 71%, 45%);        /* Green */
   --warning: hsl(38, 92%, 50%);         /* Amber */
   --error: hsl(0, 84%, 60%);            /* Red */
   
-  /* Dark Theme - Softer, Professional */
-  --bg-primary: hsl(222, 20%, 10%);
-  --bg-secondary: hsl(222, 18%, 14%);
-  --bg-tertiary: hsl(222, 16%, 18%);
-  --bg-glass: hsla(222, 16%, 20%, 0.6);
+  /* Dark Theme - Rich, Professional */
+  --bg-primary: hsl(200, 18%, 11%);
+  --bg-secondary: hsl(200, 16%, 15%);
+  --bg-tertiary: hsl(200, 14%, 19%);
+  --bg-glass: hsla(200, 14%, 20%, 0.6);
   
   /* Text Colors */
   --text-primary: hsl(0, 0%, 95%);
@@ -25,7 +25,7 @@
   --shadow-sm: 0 2px 8px hsla(0, 0%, 0%, 0.3);
   --shadow-md: 0 4px 16px hsla(0, 0%, 0%, 0.4);
   --shadow-lg: 0 8px 32px hsla(0, 0%, 0%, 0.5);
-  --shadow-glow: 0 0 20px hsla(217, 91%, 60%, 0.25);
+  --shadow-glow: 0 0 20px hsla(158, 64%, 52%, 0.2);
   
   /* Spacing */
   --spacing-xs: 0.5rem;
@@ -70,8 +70,8 @@ body::before {
   width: 100%;
   height: 100%;
   background: 
-    radial-gradient(circle at 20% 30%, hsla(217, 91%, 60%, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, hsla(195, 75%, 50%, 0.08) 0%, transparent 50%);
+    radial-gradient(circle at 20% 30%, hsla(158, 64%, 52%, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, hsla(162, 28%, 45%, 0.06) 0%, transparent 50%);
   z-index: -1;
   animation: bgShift 20s ease infinite;
 }
@@ -160,7 +160,7 @@ h3 { font-size: 1.5rem; }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 30px hsla(217, 91%, 60%, 0.4);
+  box-shadow: 0 0 30px hsla(158, 64%, 52%, 0.3);
 }
 
 .btn-secondary {
@@ -219,7 +219,7 @@ h3 { font-size: 1.5rem; }
 .form-textarea:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px hsla(217, 91%, 60%, 0.15);
+  box-shadow: 0 0 0 3px hsla(158, 64%, 52%, 0.12);
 }
 
 .form-textarea {
@@ -376,7 +376,7 @@ h3 { font-size: 1.5rem; }
   right: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, hsla(217, 91%, 60%, 0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, hsla(158, 64%, 52%, 0.06) 0%, transparent 70%);
   animation: ticketGlow 3s ease infinite;
 }
 
