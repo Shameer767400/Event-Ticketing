@@ -12,6 +12,17 @@ router.post('/request-otp', async (req, res) => {
   try {
     const { eventId, userEmail } = req.body;
 
+    // Validate inputs
+    if (!eventId || !userEmail) {
+      return res.status(400).json({ error: 'Event ID and email are required' });
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(userEmail)) {
+      return res.status(400).json({ error: 'Please enter a valid email address' });
+    }
+
     // Check if event exists
     const event = await Event.findById(eventId);
     if (!event) {
@@ -25,14 +36,13 @@ router.post('/request-otp', async (req, res) => {
     });
     
     if (approvedCount >= event.ticketLimit) {
-      return res.status(400).json({ error: 'Event is full' });
+      return res.status(400).json({ error: 'Sorry, this event is fully booked' });
     }
 
     // Generate OTP
     const otp = generateOTP();
-    // We only need email and eventId for the OTP step now
     const otpDoc = new OTP({
-      email: userEmail,
+      email: userEmail.toLowerCase(),
       otp,
       eventId
     });
@@ -46,9 +56,13 @@ router.post('/request-otp', async (req, res) => {
       // Email errors are logged but don't block the response
     });
 
-    res.json({ message: 'OTP sent successfully', otpId: otpDoc._id });
+    res.json({ 
+      message: 'OTP sent to your email. Please check your inbox.', 
+      otpId: otpDoc._id 
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('OTP request error:', error);
+    res.status(500).json({ error: 'Failed to send OTP. Please try again.' });
   }
 });
 
@@ -57,20 +71,35 @@ router.post('/verify-otp', async (req, res) => {
   try {
     const { otpId, otpCode, userName, userPhone } = req.body;
 
+    // Validate all inputs
+    if (!otpId || !otpCode || !userName || !userPhone) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    // Validate name
+    if (userName.trim().length < 2) {
+      return res.status(400).json({ error: 'Name must be at least 2 characters long' });
+    }
+
     // Validate phone number (only numbers)
     const phoneRegex = /^[0-9]{10,15}$/;
     if (!phoneRegex.test(userPhone)) {
-      return res.status(400).json({ error: 'Phone number must contain only numbers (10-15 digits)' });
+      return res.status(400).json({ error: 'Phone number must be 10-15 digits (numbers only)' });
+    }
+
+    // Validate OTP code format
+    if (otpCode.length !== 6 || !/^[0-9]{6}$/.test(otpCode)) {
+      return res.status(400).json({ error: 'OTP must be a 6-digit code' });
     }
 
     // Find OTP
     const otpRecord = await OTP.findById(otpId);
     if (!otpRecord) {
-      return res.status(400).json({ error: 'OTP expired or invalid' });
+      return res.status(400).json({ error: 'OTP has expired or is invalid. Please request a new one.' });
     }
 
     if (otpRecord.otp !== otpCode) {
-      return res.status(400).json({ error: 'Invalid OTP code' });
+      return res.status(400).json({ error: 'Invalid OTP code. Please check and try again.' });
     }
 
     // Get event details for approval mode
@@ -86,13 +115,13 @@ router.post('/verify-otp', async (req, res) => {
     });
     
     if (approvedCount >= event.ticketLimit) {
-      return res.status(400).json({ error: 'Event is full' });
+      return res.status(400).json({ error: 'Sorry, this event is now fully booked' });
     }
 
     // Create registration
     const registration = new Registration({
       eventId: otpRecord.eventId,
-      userName,
+      userName: userName.trim(),
       userEmail: otpRecord.email, // Use email from verified OTP record for security
       userPhone,
       status: event.approvalMode === 'auto' ? 'approved' : 'pending'
@@ -110,7 +139,8 @@ router.post('/verify-otp', async (req, res) => {
       registration
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('OTP verification error:', error);
+    res.status(500).json({ error: 'Registration failed. Please try again.' });
   }
 });
 

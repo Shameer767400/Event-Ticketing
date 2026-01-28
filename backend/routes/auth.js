@@ -9,14 +9,39 @@ router.post('/signup', async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
+    // Validate inputs
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Please enter a valid email address' });
+    }
+
+    // Validate password length
+    if (password.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters long' });
+    }
+
+    // Validate name length
+    if (name.trim().length < 2) {
+      return res.status(400).json({ error: 'Name must be at least 2 characters long' });
+    }
+
     // Check if user already exists
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
       return res.status(400).json({ error: 'Email already registered' });
     }
 
     // Create new user
-    const user = new User({ name, email, password });
+    const user = new User({ 
+      name: name.trim(), 
+      email: email.toLowerCase(), 
+      password 
+    });
     await user.save();
 
     // Generate token
@@ -25,7 +50,7 @@ router.post('/signup', async (req, res) => {
     });
 
     res.status(201).json({
-      message: 'User created successfully',
+      message: 'Account created successfully',
       token,
       user: {
         id: user._id,
@@ -34,7 +59,8 @@ router.post('/signup', async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Signup error:', error);
+    res.status(500).json({ error: 'Failed to create account. Please try again.' });
   }
 });
 
@@ -43,16 +69,27 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Find user
-    const user = await User.findOne({ email });
+    // Validate inputs
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Please enter a valid email address' });
+    }
+
+    // Find user (case-insensitive email)
+    const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: 'Invalid email or password' });
     }
 
     // Check password
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: 'Invalid email or password' });
     }
 
     // Generate token
@@ -70,7 +107,8 @@ router.post('/login', async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Login error:', error);
+    res.status(500).json({ error: 'Login failed. Please try again.' });
   }
 });
 
