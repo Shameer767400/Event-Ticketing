@@ -38,4 +38,7 @@ const eventSchema = new mongoose.Schema({
   timestamps: true
 });
 
+// Index for faster queries by organizer
+eventSchema.index({ organizerId: 1 });
+
 export default mongoose.model('Event', eventSchema);

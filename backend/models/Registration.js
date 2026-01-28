@@ -36,6 +36,10 @@ const registrationSchema = new mongoose.Schema({
   timestamps: true
 });
 
+// Indexes for faster queries
+registrationSchema.index({ eventId: 1, status: 1 }); // For counting approved registrations
+registrationSchema.index({ ticketId: 1 }, { sparse: true }); // For ticket lookups
+
 // Generate ticket ID when approved
 registrationSchema.pre('save', function(next) {
   if (this.status === 'approved' && !this.ticketId) {

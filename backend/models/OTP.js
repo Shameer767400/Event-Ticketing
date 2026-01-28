@@ -23,6 +23,9 @@ const otpSchema = new mongoose.Schema({
 
 });
 
+// Index for faster OTP lookups
+otpSchema.index({ email: 1, createdAt: 1 });
+
 const OTP = mongoose.model('OTP', otpSchema);
 
 export default OTP;
