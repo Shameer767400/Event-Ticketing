@@ -24,6 +24,8 @@ A full-stack event management platform built with the MERN stack. Organizers can
 - Digital tickets with unique IDs
 - Print-ready ticket design
 
+> **Note:** For demo/staging purposes, OTP codes are logged to the server console. In production environments where SMTP services may have restrictions, this ensures the registration flow remains functional. Check deployment logs to retrieve OTP codes for testing.
+
 ## 🛠️ Tech Stack
 
 **Frontend:**
@@ -36,7 +38,7 @@ A full-stack event management platform built with the MERN stack. Organizers can
 - Node.js & Express.js
 - MongoDB with Mongoose ODM
 - JWT authentication
-- Resend for email delivery
+- Nodemailer for email delivery
 - RESTful API architecture
 
 ## 📦 Project Structure
@@ -63,7 +65,7 @@ event-ticketing-app/
 ### Prerequisites
 - Node.js (v16+)
 - MongoDB (local or Atlas)
-- Resend API key (for email)
+- Gmail account with App Password (for email)
 
 ### Backend Setup
 
@@ -75,7 +77,8 @@ npm install
 MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
 PORT=5000
-RESEND_API_KEY=your_resend_api_key
+EMAIL_USER=your_gmail_address
+EMAIL_PASSWORD=your_gmail_app_password
 NODE_ENV=development
 FRONTEND_URL=http://localhost:5173
 
@@ -101,6 +104,8 @@ npm run dev
 **Database:** MongoDB Atlas
 
 Environment variables are configured in respective platforms.
+
+> **Deployment Note:** The live demo uses server-side OTP logging as a fallback mechanism. This is a common practice in staging environments to ensure functionality when email delivery services face restrictions on free-tier hosting platforms. OTP codes can be retrieved from server logs for testing purposes.
 
 ## 🔐 Security Features
 
