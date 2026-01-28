@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
+  'https://event-ticketing-assignment1.vercel.app',
   process.env.FRONTEND_URL
 ].filter(Boolean);
 
@@ -25,6 +26,7 @@ app.use(cors({
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log('❌ CORS blocked origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
