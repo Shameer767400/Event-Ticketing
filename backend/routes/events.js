@@ -27,6 +27,7 @@ router.post('/', authMiddleware, async (req, res) => {
   }
 });
 
+
 // Get organizer's events (protected)
 router.get('/', authMiddleware, async (req, res) => {
   try {
@@ -41,7 +42,8 @@ router.get('/', authMiddleware, async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const event = await Event.findById(req.params.id).populate('organizerId', 'name email');
-    if (!event) {
+    if (!event)
+ {
       return res.status(404).json({ error: 'Event not found' });
     }
     res.json({ event });
